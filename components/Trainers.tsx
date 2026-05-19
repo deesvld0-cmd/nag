@@ -119,12 +119,27 @@ const trainers = [
   },
 ];
 
+const trainerImageOrder = [
+  '/api/trainer-images/bolor-erdene',
+  '/api/trainer-images/uyanga',
+  '/api/trainer-images/amarbat',
+  '/api/trainer-images/ochirerdene',
+];
+
+function getTrainerDisplayIndex(image: string): number {
+  const idx = trainerImageOrder.indexOf(image);
+  return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+}
+
 export default function Trainers() {
   const [selected, setSelected] = useState<null | typeof trainers[0]>(null);
   const [showBooking, setShowBooking] = useState(false);
   const [bookingPlan, setBookingPlan] = useState('Single Session');
   const [bookingTime, setBookingTime] = useState('Weekday evening');
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const orderedTrainers = [...trainers].sort(
+    (a, b) => getTrainerDisplayIndex(a.image) - getTrainerDisplayIndex(b.image)
+  );
 
   const openTrainer = (trainer: typeof trainers[0], booking = false) => {
     setSelected(trainer);
@@ -157,7 +172,7 @@ export default function Trainers() {
 
         {/* Trainers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {trainers.map((trainer, i) => (
+          {orderedTrainers.map((trainer, i) => (
             <TrainerCard key={trainer.id} trainer={trainer} onSelect={openTrainer} index={i} />
           ))}
         </div>
