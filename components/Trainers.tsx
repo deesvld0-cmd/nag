@@ -231,6 +231,18 @@ export default function Trainers() {
                     <option>Weekend morning</option>
                     <option>Online consultation</option>
                   </select>
+                  <button
+                    type="button"
+                    onClick={() => setBookingConfirmed(true)}
+                    disabled={bookingConfirmed}
+                    className={`w-full rounded-xl px-4 py-3 text-sm font-bold transition-all ${
+                      bookingConfirmed
+                        ? 'bg-[#D4FF00]/20 text-[#D4FF00] cursor-default'
+                        : 'bg-[#D4FF00] text-black hover:bg-[#C1EA00]'
+                    }`}
+                  >
+                    {bookingConfirmed ? 'Booking Confirmed' : 'Confirm Booking'}
+                  </button>
                   {bookingConfirmed && (
                     <div className="rounded-xl bg-[#D4FF00]/10 px-4 py-3 text-sm text-[#D4FF00]">
                       Booking request saved for {selected.name}: {bookingPlan}, {bookingTime}.
@@ -275,12 +287,12 @@ export default function Trainers() {
                     setShowBooking(true);
                     return;
                   }
-                  setBookingConfirmed(true);
+                  setSelected(null);
                 }}
                 className="btn-primary w-full py-3.5 flex items-center justify-center gap-2 font-bold text-base"
               >
                 <Calendar className="w-4 h-4" />
-                {showBooking ? 'Confirm Booking' : 'Book a Session'}
+                {showBooking ? 'Close' : 'Book a Session'}
               </button>
             </div>
           </div>

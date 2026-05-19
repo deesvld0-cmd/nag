@@ -13,8 +13,6 @@ import Blog from '@/components/blog';
 import Footer from '@/components/Footer';
 import AIChat from '@/components/AIChat';
 
-export const dynamic = 'force-dynamic';
-
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#0B0B0B] overflow-x-hidden">

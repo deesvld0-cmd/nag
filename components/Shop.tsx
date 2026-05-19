@@ -253,7 +253,7 @@ export default function Shop() {
           </div>
           <button
             onClick={() => setCartOpen(true)}
-            className="relative btn-outline flex items-center gap-2 self-start lg:self-auto"
+            className="relative flex items-center gap-2 self-start lg:self-auto rounded-full bg-white/5 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
           >
             <ShoppingCart className="w-4 h-4" />
             Cart

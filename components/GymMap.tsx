@@ -298,7 +298,7 @@ export default function GymMap() {
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Map */}
-          <div className="h-[600px] relative rounded-2xl overflow-hidden border border-white/10 bg-[#111111]">
+          <div className="h-[380px] sm:h-[520px] lg:h-[600px] relative rounded-2xl overflow-hidden border border-white/10 bg-[#111111]">
             <GymMapInteractive gyms={gyms} onGymClick={setSelectedGym} />
             <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-sm rounded-xl p-4 border border-white/10 pointer-events-none">
               <div className="flex items-center gap-2 text-white/80 text-sm">
@@ -309,7 +309,7 @@ export default function GymMap() {
           </div>
 
           {/* Gym List */}
-          <div className="h-[600px] overflow-y-auto space-y-4 pr-2">
+          <div className="h-[420px] sm:h-[520px] lg:h-[600px] overflow-y-auto space-y-4 pr-2">
             {gyms.map((gym) => (
               <div
                 key={gym.id}

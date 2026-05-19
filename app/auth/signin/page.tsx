@@ -9,6 +9,7 @@ function SignInInner() {
   const searchParams = useSearchParams()
   const { t } = useLanguage()
   const [googleEnabled, setGoogleEnabled] = useState(true)
+  const [redirectUri, setRedirectUri] = useState<string | null>(null)
 
   const error = searchParams.get('error')
   const errorMessage = useMemo(() => {
@@ -33,6 +34,10 @@ function SignInInner() {
         if (!mounted) return
         setGoogleEnabled(false)
       })
+
+    // Helpful for fixing Google `redirect_uri_mismatch`:
+    // the exact value must be added to Google Cloud Console.
+    setRedirectUri(`${window.location.origin}/api/auth/callback/google`)
     return () => {
       mounted = false
     }
@@ -74,6 +79,14 @@ function SignInInner() {
           </svg>
           Sign in with Google
         </button>
+
+        {redirectUri && (
+          <div className="mt-4 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70">
+            <div className="font-semibold text-white mb-1">{t('signIn.oauthHint.redirectUri')}</div>
+            <div className="break-all font-mono text-white/80">{redirectUri}</div>
+            <div className="mt-2 text-white/40">{t('signIn.oauthHint.googleConsole')}</div>
+          </div>
+        )}
         {!googleEnabled && (
           <p className="mt-2 text-xs text-yellow-300/80 text-center">
             Google auth is not configured on this environment yet.
