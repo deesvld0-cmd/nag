@@ -1,6 +1,5 @@
 import { NextAuthOptions } from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { prisma } from '@/lib/prisma'
 import { getAdminEmails } from '@/lib/admin'
@@ -12,22 +11,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma) as any,
   providers: [
-    CredentialsProvider({
-      name: 'Demo',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        name: { label: 'Name', type: 'text' },
-      },
-      async authorize(credentials) {
-        const email = credentials?.email || 'demo@nanzad.local'
-        return {
-          id: email,
-          email,
-          name: credentials?.name || 'Demo User',
-          role: 'user',
-        } as any
-      },
-    }),
     ...(googleClientId && googleClientSecret
       ? [
           GoogleProvider({

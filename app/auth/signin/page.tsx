@@ -13,7 +13,7 @@ function SignInInner() {
   const error = searchParams.get('error')
   const errorMessage = useMemo(() => {
     if (!error) return null
-    if (error === 'OAuthSignin') return 'Google sign in is unavailable locally. Continue with demo access.'
+    if (error === 'OAuthSignin') return 'Google sign in is currently unavailable. Please try again.'
     if (error === 'OAuthCallback' || error === 'Callback')
       return t('signIn.error.oauthCallback')
     if (error === 'Configuration')
@@ -79,26 +79,6 @@ function SignInInner() {
             Google auth is not configured on this environment yet.
           </p>
         )}
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/20"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-[#0B0B0B] text-white/40">or</span>
-          </div>
-        </div>
-        <button
-          onClick={() =>
-            signIn('credentials', {
-              email: 'demo@nanzad.local',
-              name: 'Demo User',
-              callbackUrl: '/',
-            })
-          }
-          className="w-full flex items-center justify-center gap-3 bg-white/10 text-white py-3 px-6 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20"
-        >
-          Continue with Demo
-        </button>
       </div>
     </div>
   )
