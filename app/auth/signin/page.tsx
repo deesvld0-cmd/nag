@@ -55,6 +55,8 @@ function SignInInner() {
             googleEnabled &&
             signIn('google', {
               callbackUrl: '/',
+            }, {
+              prompt: 'consent select_account',
             })
           }
           disabled={!googleEnabled}

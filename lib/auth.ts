@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
             clientSecret: googleClientSecret,
             authorization: {
               params: {
-                prompt: 'select_account',
+                prompt: 'consent select_account',
               },
             },
           }),
