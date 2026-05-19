@@ -5,6 +5,9 @@ import GoogleProvider from 'next-auth/providers/google'
 import { prisma } from '@/lib/prisma'
 import { getAdminEmails } from '@/lib/admin'
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim()
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim()
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma) as any,
@@ -25,15 +28,19 @@ export const authOptions: NextAuthOptions = {
         } as any
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      authorization: {
-        params: {
-          prompt: "select_account",
-        }
-      }
-    }),
+    ...(googleClientId && googleClientSecret
+      ? [
+          GoogleProvider({
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+            authorization: {
+              params: {
+                prompt: 'select_account',
+              },
+            },
+          }),
+        ]
+      : []),
   ],
   session: {
     strategy: 'jwt',

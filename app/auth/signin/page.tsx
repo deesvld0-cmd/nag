@@ -1,13 +1,14 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useMemo } from 'react'
-import { signIn } from 'next-auth/react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { getProviders, signIn } from 'next-auth/react'
 import { useLanguage } from '@/lib/i18n'
 
 function SignInInner() {
   const searchParams = useSearchParams()
   const { t } = useLanguage()
+  const [googleEnabled, setGoogleEnabled] = useState(true)
 
   const error = searchParams.get('error')
   const errorMessage = useMemo(() => {
@@ -20,6 +21,22 @@ function SignInInner() {
     if (error === 'AccessDenied') return t('signIn.error.accessDenied')
     return `${t('signIn.error.default')} ${error}`
   }, [error, t])
+
+  useEffect(() => {
+    let mounted = true
+    getProviders()
+      .then((providers) => {
+        if (!mounted) return
+        setGoogleEnabled(Boolean(providers?.google))
+      })
+      .catch(() => {
+        if (!mounted) return
+        setGoogleEnabled(false)
+      })
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0B0B0B]">
@@ -35,11 +52,17 @@ function SignInInner() {
         )}
         <button
           onClick={() =>
+            googleEnabled &&
             signIn('google', {
               callbackUrl: '/',
             })
           }
-          className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          disabled={!googleEnabled}
+          className={`w-full flex items-center justify-center gap-3 py-3 px-6 rounded-lg font-semibold transition-colors ${
+            googleEnabled
+              ? 'bg-white text-gray-900 hover:bg-gray-100'
+              : 'bg-white/10 text-white/50 cursor-not-allowed'
+          }`}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -49,6 +72,11 @@ function SignInInner() {
           </svg>
           Sign in with Google
         </button>
+        {!googleEnabled && (
+          <p className="mt-2 text-xs text-yellow-300/80 text-center">
+            Google auth is not configured on this environment yet.
+          </p>
+        )}
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-white/20"></div>
