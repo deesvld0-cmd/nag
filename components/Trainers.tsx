@@ -9,7 +9,7 @@ const trainers = [
     name: 'Б.Амарбат',
     role: 'Powerlifting Coach',
     specialty: 'Powerlifting & Strength',
-    image: '/api/trainer-images/amarbat',
+    image: '/trainer-amarbat.jpg?v=20260520-1',
     experience: '10+ Years',
     clients: '200+',
     certifications: ['Powerlifting Coach', 'Strength & Conditioning'],
@@ -35,7 +35,7 @@ const trainers = [
     name: 'Б.Уянга',
     role: 'Fitness & Beauty Coach',
     specialty: 'Fitness & Beauty',
-    image: '/api/trainer-images/uyanga',
+    image: '/trainer-uyanga.jpg?v=20260520-1',
     experience: '5+ Years',
     clients: '150+',
     certifications: ['Fitness Trainer', 'Beauty & Wellness'],
@@ -68,7 +68,7 @@ const trainers = [
     name: 'Н.Болор-Эрдэнэ',
     role: 'Fat Loss Specialist',
     specialty: 'Fat Loss & Nutrition',
-    image: '/api/trainer-images/bolor-erdene',
+    image: '/trainer-bolorerdene.jpg?v=20260520-1',
     experience: '6 Years',
     clients: '180+',
     certifications: ['Fat Loss Specialist', 'Nutrition Coach'],
@@ -100,7 +100,7 @@ const trainers = [
     name: 'Т.Очирэрдэнэ',
     role: 'Boxing Coach',
     specialty: 'Boxing & Combat Sports',
-    image: '/api/trainer-images/ochirerdene',
+    image: '/trainer-ochirerdene.jpg?v=20260520-1',
     experience: '8 Years',
     clients: '120+',
     certifications: ['Boxing Coach', 'Combat Sports'],
@@ -120,10 +120,10 @@ const trainers = [
 ];
 
 const trainerImageOrder = [
-  '/api/trainer-images/bolor-erdene',
-  '/api/trainer-images/uyanga',
-  '/api/trainer-images/amarbat',
-  '/api/trainer-images/ochirerdene',
+  '/trainer-bolorerdene.jpg?v=20260520-1',
+  '/trainer-uyanga.jpg?v=20260520-1',
+  '/trainer-amarbat.jpg?v=20260520-1',
+  '/trainer-ochirerdene.jpg?v=20260520-1',
 ];
 
 function getTrainerDisplayIndex(image: string): number {
