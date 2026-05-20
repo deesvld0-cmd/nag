@@ -1,13 +1,21 @@
-import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+export const runtime = 'nodejs'
+export const maxDuration = 60
 
 export async function POST(request: Request) {
   try {
     const { messages } = await request.json()
+
+    const apiKey = (process.env.OPENAI_API_KEY || '').trim()
+    if (!apiKey || apiKey === 'your-openai-api-key-here') {
+      return new Response(
+        'AI is not configured yet. Please set OPENAI_API_KEY in your Vercel project (Production environment) and redeploy.',
+        { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+      )
+    }
+
+    const openai = new OpenAI({ apiKey })
 
     const systemMessage = {
       role: 'system' as const,
@@ -24,9 +32,9 @@ Keep responses concise, practical, and encouraging. Always prioritize safety and
     // Streaming gives the user an answer "instantly" (first tokens appear quickly),
     // which feels much faster than waiting for the full JSON response.
     const stream = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini',
       messages: [systemMessage, ...(Array.isArray(messages) ? messages : [])],
-      max_tokens: 260,
+      max_tokens: 400,
       temperature: 0.7,
       stream: true,
     })
@@ -55,6 +63,27 @@ Keep responses concise, practical, and encouraging. Always prioritize safety and
     })
   } catch (error) {
     console.error('AI Chat Error:', error)
-    return NextResponse.json({ error: 'Failed to get AI response' }, { status: 500 })
+
+    const status = (error as any)?.status as number | undefined
+    const message = (error as any)?.message as string | undefined
+
+    if (status === 401) {
+      return new Response(
+        'AI auth failed (OpenAI API key is missing/invalid). Please check OPENAI_API_KEY in Vercel and redeploy.',
+        { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+      )
+    }
+
+    if (status === 429) {
+      return new Response('AI is rate limited right now. Please try again in a minute.', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      })
+    }
+
+    return new Response(message || 'Failed to get AI response.', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    })
   }
 }

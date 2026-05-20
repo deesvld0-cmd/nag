@@ -44,11 +44,28 @@ export default function AIChat() {
       })
 
       if (!response.ok) {
-        throw new Error(`AI request failed: ${response.status}`)
+        const errorText = await response.text().catch(() => '')
+        setMessages((prev) => {
+          const next = [...prev]
+          const lastIdx = next.length - 1
+          const content = errorText || `AI request failed (${response.status}).`
+          if (next[lastIdx]?.role === 'assistant') next[lastIdx] = { role: 'assistant', content }
+          else next.push({ role: 'assistant', content })
+          return next
+        })
+        return
       }
 
       if (!response.body) {
-        throw new Error('AI response stream is empty')
+        setMessages((prev) => {
+          const next = [...prev]
+          const lastIdx = next.length - 1
+          const content = 'AI response stream is empty. Please try again.'
+          if (next[lastIdx]?.role === 'assistant') next[lastIdx] = { role: 'assistant', content }
+          else next.push({ role: 'assistant', content })
+          return next
+        })
+        return
       }
 
       const reader = response.body.getReader()
@@ -213,4 +230,3 @@ export default function AIChat() {
     </>
   )
 }
-
